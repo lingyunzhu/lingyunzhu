@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="RxJava RxBus," />
 
 
 
@@ -84,15 +84,19 @@
 
 
 
-<meta name="description" content="记录技术路上的点点滴滴">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Android猿">
-<meta property="og:url" content="https://lingyunzhu.github.io/index.html">
+<meta name="description" content="之前写过一篇文章：RxBus的实现及简单使用。今天我们尝试使用RxBus动态切换主题。
+一、定义主题颜色color.xml1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253&amp;lt;color name=&amp;quot;red_primary&amp;quot;&amp;gt;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android动态设置主题（使用RxBus模式）">
+<meta property="og:url" content="https://lingyunzhu.github.io/2016/03/07/Android动态设置主题（使用RxBus模式）/index.html">
 <meta property="og:site_name" content="Android猿">
-<meta property="og:description" content="记录技术路上的点点滴滴">
+<meta property="og:description" content="之前写过一篇文章：RxBus的实现及简单使用。今天我们尝试使用RxBus动态切换主题。
+一、定义主题颜色color.xml1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253&amp;lt;color name=&amp;quot;red_primary&amp;quot;&amp;gt;">
+<meta property="og:updated_time" content="2016-08-01T12:36:54.632Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Android猿">
-<meta name="twitter:description" content="记录技术路上的点点滴滴">
+<meta name="twitter:title" content="Android动态设置主题（使用RxBus模式）">
+<meta name="twitter:description" content="之前写过一篇文章：RxBus的实现及简单使用。今天我们尝试使用RxBus动态切换主题。
+一、定义主题颜色color.xml1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253&amp;lt;color name=&amp;quot;red_primary&amp;quot;&amp;gt;">
 
 
 
@@ -113,9 +117,9 @@
 
 
 
-  <link rel="canonical" href="https://lingyunzhu.github.io/"/>
+  <link rel="canonical" href="https://lingyunzhu.github.io/2016/03/07/Android动态设置主题（使用RxBus模式）/"/>
 
-  <title> Android猿 </title>
+  <title> Android动态设置主题（使用RxBus模式） | Android猿 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -146,9 +150,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left 
-   page-home 
- ">
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -225,9 +227,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
   
@@ -247,10 +249,7 @@
             
             
               
-                
-                <a class="post-title-link" href="/2016/03/07/Android动态设置主题（使用RxBus模式）/" itemprop="url">
-                  Android动态设置主题（使用RxBus模式）
-                </a>
+                Android动态设置主题（使用RxBus模式）
               
             
           </h1>
@@ -262,7 +261,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-03-07T00:00:00+00:00" content="2016-03-07">
+            <time itemprop="dateCreated" datetime="2016-03-07T08:00:00+08:00" content="2016-03-07">
               2016-03-07
             </time>
           </span>
@@ -306,9 +305,7 @@
       
 
       
-        
-          
-            <p>之前写过一篇文章：<a href="http://lingyunzhu.github.io/2016/06/28/RxBus%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8F%8A%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/">RxBus的实现及简单使用</a>。今天我们尝试使用RxBus动态切换主题。</p>
+        <p>之前写过一篇文章：<a href="http://lingyunzhu.github.io/2016/06/28/RxBus%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8F%8A%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/">RxBus的实现及简单使用</a>。今天我们尝试使用RxBus动态切换主题。</p>
 <h2 id="一、定义主题颜色"><a href="#一、定义主题颜色" class="headerlink" title="一、定义主题颜色"></a>一、定义主题颜色</h2><p>color.xml<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">&lt;color name=&quot;red_primary&quot;&gt;#F44336&lt;/color&gt;</span><br><span class="line">&lt;color name=&quot;red_primary_dark&quot;&gt;#D32F2F&lt;/color&gt;</span><br><span class="line">&lt;color name=&quot;red_accent&quot;&gt;#F44336&lt;/color&gt;</span><br><span class="line"></span><br><span class="line">&lt;color name=&quot;pink_primary&quot;&gt;#E91E63&lt;/color&gt;</span><br><span class="line">&lt;color name=&quot;pink_primary_dark&quot;&gt;#C2185B&lt;/color&gt;</span><br><span class="line">&lt;color name=&quot;pink_accent&quot;&gt;#E91E63&lt;/color&gt;</span><br><span class="line"></span><br><span class="line">&lt;color name=&quot;brown_primary&quot;&gt;#795548&lt;/color&gt;</span><br><span class="line">&lt;color name=&quot;brown_primary_dark&quot;&gt;#5D4037&lt;/color&gt;</span><br><span class="line">&lt;color name=&quot;brown_accent&quot;&gt;#795548&lt;/color&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;color name=&quot;blue_primary&quot;&gt;#2196F3&lt;/color&gt;</span><br><span class="line">&lt;color name=&quot;blue_primary_dark&quot;&gt;#1976D2&lt;/color&gt;</span><br><span class="line">&lt;color name=&quot;blue_accent&quot;&gt;#2196F3&lt;/color&gt;</span><br><span class="line"></span><br><span class="line">&lt;color name=&quot;blue_grey_primary&quot;&gt;#607D8B&lt;/color&gt;</span><br><span class="line">&lt;color name=&quot;blue_grey_primary_dark&quot;&gt;#455A64&lt;/color&gt;</span><br><span class="line">&lt;color name=&quot;blue_grey_accent&quot;&gt;#607D8B&lt;/color&gt;</span><br><span class="line"></span><br><span class="line">&lt;color name=&quot;yellow_primary&quot;&gt;#FFEB3B&lt;/color&gt;</span><br><span class="line">&lt;color name=&quot;yellow_primary_dark&quot;&gt;#FBC02D&lt;/color&gt;</span><br><span class="line">&lt;color name=&quot;yellow_accent&quot;&gt;#FFEB3B&lt;/color&gt;</span><br><span class="line"></span><br><span class="line">&lt;color name=&quot;deep_purple_primary&quot;&gt;#673AB7&lt;/color&gt;</span><br><span class="line">&lt;color name=&quot;deep_purple_primary_dark&quot;&gt;#512DA8&lt;/color&gt;</span><br><span class="line">&lt;color name=&quot;deep_purple_accent&quot;&gt;#673AB7&lt;/color&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;color name=&quot;green_primary&quot;&gt;#4CAF50&lt;/color&gt;</span><br><span class="line">&lt;color name=&quot;green_primary_dark&quot;&gt;#388E3C&lt;/color&gt;</span><br><span class="line">&lt;color name=&quot;green_accent&quot;&gt;#4CAF50&lt;/color&gt;</span><br><span class="line"></span><br><span class="line">&lt;color name=&quot;deep_orange_primary&quot;&gt;#FF5722&lt;/color&gt;</span><br><span class="line">&lt;color name=&quot;deep_orange_primary_dark&quot;&gt;#E64A19&lt;/color&gt;</span><br><span class="line">&lt;color name=&quot;deep_orange_accent&quot;&gt;#FF5722&lt;/color&gt;</span><br><span class="line"></span><br><span class="line">&lt;color name=&quot;grey_primary&quot;&gt;#9E9E9E&lt;/color&gt;</span><br><span class="line">&lt;color name=&quot;grey_primary_dark&quot;&gt;#616161&lt;/color&gt;</span><br><span class="line">&lt;color name=&quot;grey_accent&quot;&gt;#9E9E9E&lt;/color&gt;</span><br><span class="line"></span><br><span class="line">&lt;color name=&quot;cyan_primary&quot;&gt;#00BCD4&lt;/color&gt;</span><br><span class="line">&lt;color name=&quot;cyan_primary_dark&quot;&gt;#0097A7&lt;/color&gt;</span><br><span class="line">&lt;color name=&quot;cyan_accent&quot;&gt;#00BCD4&lt;/color&gt;</span><br><span class="line"></span><br><span class="line">&lt;color name=&quot;amber_primary&quot;&gt;#FFC107&lt;/color&gt;</span><br><span class="line">&lt;color name=&quot;amber_primary_dark&quot;&gt;#FFA000&lt;/color&gt;</span><br><span class="line">&lt;color name=&quot;amber_accent&quot;&gt;#FFC107&lt;/color&gt;</span><br><span class="line"></span><br><span class="line">&lt;color name=&quot;primary&quot;&gt;#2196F3&lt;/color&gt;</span><br><span class="line">&lt;color name=&quot;primary_dark&quot;&gt;#1E88E5&lt;/color&gt;</span><br><span class="line">&lt;color name=&quot;accent&quot;&gt;@color/primary&lt;/color&gt;</span><br></pre></td></tr></table></figure></p>
 <h2 id="二、定义主题样式"><a href="#二、定义主题样式" class="headerlink" title="二、定义主题样式"></a>二、定义主题样式</h2><p>styles.xml<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line">&lt;style name=&quot;RedTheme&quot; parent=&quot;AppTheme&quot;&gt;</span><br><span class="line">     &lt;item name=&quot;colorPrimary&quot;&gt;@color/red_primary&lt;/item&gt;</span><br><span class="line">     &lt;item name=&quot;colorPrimaryDark&quot;&gt;@color/red_primary_dark&lt;/item&gt;</span><br><span class="line">     &lt;item name=&quot;colorAccent&quot;&gt;@color/red_accent&lt;/item&gt;</span><br><span class="line"> &lt;/style&gt;</span><br><span class="line"></span><br><span class="line"> &lt;style name=&quot;PinkTheme&quot; parent=&quot;AppTheme&quot;&gt;</span><br><span class="line">     &lt;item name=&quot;colorPrimary&quot;&gt;@color/pink_primary&lt;/item&gt;</span><br><span class="line">     &lt;item name=&quot;colorPrimaryDark&quot;&gt;@color/pink_primary_dark&lt;/item&gt;</span><br><span class="line">     &lt;item name=&quot;colorAccent&quot;&gt;@color/pink_accent&lt;/item&gt;</span><br><span class="line"> &lt;/style&gt;</span><br><span class="line"></span><br><span class="line"> &lt;style name=&quot;BrownTheme&quot; parent=&quot;AppTheme&quot;&gt;</span><br><span class="line">     &lt;item name=&quot;colorPrimary&quot;&gt;@color/brown_primary&lt;/item&gt;</span><br><span class="line">     &lt;item name=&quot;colorPrimaryDark&quot;&gt;@color/brown_primary_dark&lt;/item&gt;</span><br><span class="line">     &lt;item name=&quot;colorAccent&quot;&gt;@color/brown_accent&lt;/item&gt;</span><br><span class="line"> &lt;/style&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"> &lt;style name=&quot;BlueTheme&quot; parent=&quot;AppTheme&quot;&gt;</span><br><span class="line">     &lt;item name=&quot;colorPrimary&quot;&gt;@color/blue_primary&lt;/item&gt;</span><br><span class="line">     &lt;item name=&quot;colorPrimaryDark&quot;&gt;@color/blue_primary_dark&lt;/item&gt;</span><br><span class="line">     &lt;item name=&quot;colorAccent&quot;&gt;@color/blue_accent&lt;/item&gt;</span><br><span class="line"> &lt;/style&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"> &lt;style name=&quot;BlueGreyTheme&quot; parent=&quot;AppTheme&quot;&gt;</span><br><span class="line">     &lt;item name=&quot;colorPrimary&quot;&gt;@color/blue_grey_primary&lt;/item&gt;</span><br><span class="line">     &lt;item name=&quot;colorPrimaryDark&quot;&gt;@color/blue_grey_primary_dark&lt;/item&gt;</span><br><span class="line">     &lt;item name=&quot;colorAccent&quot;&gt;@color/blue_grey_accent&lt;/item&gt;</span><br><span class="line"> &lt;/style&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"> &lt;style name=&quot;YellowTheme&quot; parent=&quot;AppTheme&quot;&gt;</span><br><span class="line">     &lt;item name=&quot;colorPrimary&quot;&gt;@color/yellow_primary&lt;/item&gt;</span><br><span class="line">     &lt;item name=&quot;colorPrimaryDark&quot;&gt;@color/yellow_primary_dark&lt;/item&gt;</span><br><span class="line">     &lt;item name=&quot;colorAccent&quot;&gt;@color/yellow_accent&lt;/item&gt;</span><br><span class="line"> &lt;/style&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"> &lt;style name=&quot;DeepPurpleTheme&quot; parent=&quot;AppTheme&quot;&gt;</span><br><span class="line">     &lt;item name=&quot;colorPrimary&quot;&gt;@color/deep_purple_primary&lt;/item&gt;</span><br><span class="line">     &lt;item name=&quot;colorPrimaryDark&quot;&gt;@color/deep_purple_primary_dark&lt;/item&gt;</span><br><span class="line">     &lt;item name=&quot;colorAccent&quot;&gt;@color/deep_purple_accent&lt;/item&gt;</span><br><span class="line"> &lt;/style&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"> &lt;style name=&quot;GreenTheme&quot; parent=&quot;AppTheme&quot;&gt;</span><br><span class="line">     &lt;item name=&quot;colorPrimary&quot;&gt;@color/green_primary&lt;/item&gt;</span><br><span class="line">     &lt;item name=&quot;colorPrimaryDark&quot;&gt;@color/green_primary_dark&lt;/item&gt;</span><br><span class="line">     &lt;item name=&quot;colorAccent&quot;&gt;@color/green_accent&lt;/item&gt;</span><br><span class="line"> &lt;/style&gt;</span><br><span class="line"></span><br><span class="line"> &lt;style name=&quot;DeepOrangeTheme&quot; parent=&quot;AppTheme&quot;&gt;</span><br><span class="line">     &lt;item name=&quot;colorPrimary&quot;&gt;@color/deep_orange_primary&lt;/item&gt;</span><br><span class="line">     &lt;item name=&quot;colorPrimaryDark&quot;&gt;@color/deep_orange_primary_dark&lt;/item&gt;</span><br><span class="line">     &lt;item name=&quot;colorAccent&quot;&gt;@color/deep_orange_accent&lt;/item&gt;</span><br><span class="line"> &lt;/style&gt;</span><br><span class="line"></span><br><span class="line"> &lt;style name=&quot;GreyTheme&quot; parent=&quot;AppTheme&quot;&gt;</span><br><span class="line">     &lt;item name=&quot;colorPrimary&quot;&gt;@color/grey_primary&lt;/item&gt;</span><br><span class="line">     &lt;item name=&quot;colorPrimaryDark&quot;&gt;@color/grey_primary_dark&lt;/item&gt;</span><br><span class="line">     &lt;item name=&quot;colorAccent&quot;&gt;@color/grey_accent&lt;/item&gt;</span><br><span class="line"> &lt;/style&gt;</span><br><span class="line"></span><br><span class="line"> &lt;style name=&quot;CyanTheme&quot; parent=&quot;AppTheme&quot;&gt;</span><br><span class="line">     &lt;item name=&quot;colorPrimary&quot;&gt;@color/cyan_primary&lt;/item&gt;</span><br><span class="line">     &lt;item name=&quot;colorPrimaryDark&quot;&gt;@color/cyan_primary_dark&lt;/item&gt;</span><br><span class="line">     &lt;item name=&quot;colorAccent&quot;&gt;@color/cyan_accent&lt;/item&gt;</span><br><span class="line"> &lt;/style&gt;</span><br><span class="line"></span><br><span class="line"> &lt;style name=&quot;AmberTheme&quot; parent=&quot;AppTheme&quot;&gt;</span><br><span class="line">     &lt;item name=&quot;colorPrimary&quot;&gt;@color/amber_primary&lt;/item&gt;</span><br><span class="line">     &lt;item name=&quot;colorPrimaryDark&quot;&gt;@color/amber_primary_dark&lt;/item&gt;</span><br><span class="line">     &lt;item name=&quot;colorAccent&quot;&gt;@color/amber_accent&lt;/item&gt;</span><br><span class="line"> &lt;/style&gt;</span><br></pre></td></tr></table></figure></p>
 <h2 id="三、在需要的地方弹出主题选择对话框"><a href="#三、在需要的地方弹出主题选择对话框" class="headerlink" title="三、在需要的地方弹出主题选择对话框"></a>三、在需要的地方弹出主题选择对话框</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">private void showThemeChooseDialog() &#123;</span><br><span class="line">        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);</span><br><span class="line">        builder.setTitle(&quot;设置主题&quot;);</span><br><span class="line">        Integer[] res = new Integer[]&#123;R.drawable.red_round, R.drawable.brown_round, R.drawable.blue_round,</span><br><span class="line">                R.drawable.blue_grey_round, R.drawable.yellow_round, R.drawable.deep_purple_round,</span><br><span class="line">                R.drawable.pink_round, R.drawable.green_round, R.drawable.deep_orange_round,</span><br><span class="line">                R.drawable.grey_round, R.drawable.cyan_round&#125;;</span><br><span class="line">        List&lt;Integer&gt; list = Arrays.asList(res);</span><br><span class="line">        ColorsListAdapter adapter = new ColorsListAdapter(MainActivity.this, list);</span><br><span class="line">        adapter.setCheckItem(MyThemeUtils.getCurrentTheme(MainActivity.this).getIntValue());</span><br><span class="line">        GridView gridView = (GridView) LayoutInflater.from(MainActivity.this).inflate(R.layout.colors_panel_layout, null);</span><br><span class="line">        gridView.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);</span><br><span class="line">        gridView.setCacheColorHint(0);</span><br><span class="line">        gridView.setAdapter(adapter);</span><br><span class="line">        builder.setView(gridView);</span><br><span class="line">        final AlertDialog dialog = builder.show();</span><br><span class="line">        gridView.setOnItemClickListener(</span><br><span class="line">                new AdapterView.OnItemClickListener() &#123;</span><br><span class="line">                    @Override</span><br><span class="line">                    public void onItemClick(AdapterView&lt;?&gt; parent, View view, int position, long id) &#123;</span><br><span class="line">                        dialog.dismiss();</span><br><span class="line">                        int value = MyThemeUtils.getCurrentTheme(MainActivity.this).getIntValue();</span><br><span class="line">                        if (value != position) &#123;</span><br><span class="line">                            PreferenceUtils.getInstance(MainActivity.this).saveParam(&quot;change_theme_key&quot;, position);</span><br><span class="line">                            changeTheme(MyThemeUtils.Theme.mapValueToTheme(position));</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
@@ -322,157 +319,58 @@
 <p>基类BaseActivity，主题的初始化。注意，需要变换主题的Activity需继承BaseActivity<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public class BaseActivity extends AppCompatActivity &#123;</span><br><span class="line">    protected PreferenceUtils preferenceUtils;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onCreate(Bundle savedInstanceState) &#123;</span><br><span class="line">        preferenceUtils = PreferenceUtils.getInstance(this);</span><br><span class="line">        initTheme();</span><br><span class="line">        super.onCreate(savedInstanceState);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void initTheme() &#123;</span><br><span class="line">        MyThemeUtils.Theme theme = MyThemeUtils.getCurrentTheme(this);</span><br><span class="line">        MyThemeUtils.changTheme(this, theme);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>参考：<br><a href="https://github.com/lguipeng/Notes" target="_blank" rel="external">https://github.com/lguipeng/Notes</a></p>
 
-          
+      
+    </div>
+
+    <div>
+      
         
       
     </div>
 
     <div>
       
-    </div>
+        
 
-    <div>
       
     </div>
 
     <footer class="post-footer">
       
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/03/01/RxBus的实现及简单使用/" itemprop="url">
-                  RxBus的实现及简单使用
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-03-01T00:00:00+00:00" content="2016-03-01">
-              2016-03-01
-            </time>
-          </span>
-
+        <div class="post-tags">
           
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/03/01/RxBus的实现及简单使用/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/01/RxBus的实现及简单使用/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/03/01/RxBus的实现及简单使用/" class="leancloud_visitors" data-flag-title="RxBus的实现及简单使用">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
+            <a href="/tags/RxJava-RxBus/" rel="tag">#RxJava RxBus</a>
           
         </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-            <blockquote>
-<p>RxJava目前已经很火了，如果你尚未了解请看<a href="http://wuxiaolong.me/2016/01/18/rxjava/" target="_blank" rel="external">这里</a>。对于RxJava这里不多做介绍。<br>RxBus并不是一个库，而是一种模式。相信大多数开发者都使用过EventBus，作为事件总线通信库，如果你的项目已经加入RxJava和EventBus，不妨用RxBus代替EventBus，以减少库的依赖。</p>
-</blockquote>
-<h2 id="一、添加RxJava和RxAndroid依赖"><a href="#一、添加RxJava和RxAndroid依赖" class="headerlink" title="一、添加RxJava和RxAndroid依赖"></a>一、添加RxJava和RxAndroid依赖</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">//RxJava and RxAndroid</span><br><span class="line">compile &apos;io.reactivex:rxandroid:1.1.0&apos;</span><br><span class="line">compile &apos;io.reactivex:rxjava:1.1.0&apos;</span><br></pre></td></tr></table></figure>
-<h2 id="二、新建RxBus类"><a href="#二、新建RxBus类" class="headerlink" title="二、新建RxBus类"></a>二、新建RxBus类</h2><p>不多说直接上代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line">import rx.Observable;</span><br><span class="line">import rx.subjects.PublishSubject;</span><br><span class="line">import rx.subjects.SerializedSubject;</span><br><span class="line">import rx.subjects.Subject;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * Created by xialo on 2016/6/28.</span><br><span class="line"> */</span><br><span class="line">public class RxBus &#123;</span><br><span class="line"></span><br><span class="line">    private static volatile RxBus mInstance;</span><br><span class="line"></span><br><span class="line">    private final Subject bus;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    public RxBus()</span><br><span class="line">    &#123;</span><br><span class="line">        bus = new SerializedSubject&lt;&gt;(PublishSubject.create());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 单例模式RxBus</span><br><span class="line">     *</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    public static RxBus getInstance()</span><br><span class="line">    &#123;</span><br><span class="line"></span><br><span class="line">        RxBus rxBus2 = mInstance;</span><br><span class="line">        if (mInstance == null)</span><br><span class="line">        &#123;</span><br><span class="line">            synchronized (RxBus.class)</span><br><span class="line">            &#123;</span><br><span class="line">                rxBus2 = mInstance;</span><br><span class="line">                if (mInstance == null)</span><br><span class="line">                &#123;</span><br><span class="line">                    rxBus2 = new RxBus();</span><br><span class="line">                    mInstance = rxBus2;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return rxBus2;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 发送消息</span><br><span class="line">     *</span><br><span class="line">     * @param object</span><br><span class="line">     */</span><br><span class="line">    public void post(Object object)</span><br><span class="line">    &#123;</span><br><span class="line"></span><br><span class="line">        bus.onNext(object);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 接收消息</span><br><span class="line">     *</span><br><span class="line">     * @param eventType</span><br><span class="line">     * @param &lt;T&gt;</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    public &lt;T&gt; Observable&lt;T&gt; toObserverable(Class&lt;T&gt; eventType)</span><br><span class="line">    &#123;</span><br><span class="line">        return bus.ofType(eventType);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>1、<a href="http://reactivex.io/documentation/subject.html" target="_blank" rel="external">Subject</a>同时充当了Observer和Observable的角色，Subject是非线程安全的，要避免该问题，需要将 Subject转换为一个 <a href="http://reactivex.io/RxJava/javadoc/rx/subjects/SerializedSubject.html" target="_blank" rel="external">SerializedSubject</a>，上述RxBus类中把线程非安全的PublishSubject包装成线程安全的Subject。<br>2、PublishSubject只会把在订阅发生的时间点之后来自原始Observable的数据发射给观察者。<br>3、ofType操作符只发射指定类型的数据，其内部就是filter+cast</p>
-<h2 id="三、创建你需要发送的事件类"><a href="#三、创建你需要发送的事件类" class="headerlink" title="三、创建你需要发送的事件类"></a>三、创建你需要发送的事件类</h2><p>我们这里用StudentEvent举例<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Created by xialo on 2016/6/28.</span><br><span class="line"> */</span><br><span class="line">public class StudentEvent &#123;</span><br><span class="line">    private String id;</span><br><span class="line">    private String name;</span><br><span class="line"></span><br><span class="line">    public StudentEvent(String id, String name) &#123;</span><br><span class="line">        this.id = id;</span><br><span class="line">        this.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getId() &#123;</span><br><span class="line">        return id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setId(String id) &#123;</span><br><span class="line">        this.id = id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getName() &#123;</span><br><span class="line">        return name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setName(String name) &#123;</span><br><span class="line">        this.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="四、发送事件"><a href="#四、发送事件" class="headerlink" title="四、发送事件"></a>四、发送事件</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RxBus.getInstance().post(new StudentEvent(&quot;007&quot;,&quot;小明&quot;));</span><br></pre></td></tr></table></figure>
-<h2 id="五、接收事件"><a href="#五、接收事件" class="headerlink" title="五、接收事件"></a>五、接收事件</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">rxSbscription=RxBus.getInstance().toObserverable(StudentEvent.class)</span><br><span class="line">                .subscribe(new Action1&lt;StudentEvent&gt;() &#123;</span><br><span class="line">                    @Override</span><br><span class="line">                    public void call(StudentEvent studentEvent) &#123;</span><br><span class="line">                        textView.setText(&quot;id:&quot;+ studentEvent.getId()+&quot;  name:&quot;+ studentEvent.getName());</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br></pre></td></tr></table></figure>
-<p>注：rxSbscription是Sbscription的对象，我们这里把RxBus.getInstance().toObserverable(StudentEvent.class)赋值给rxSbscription以方便生命周期结束时取消订阅事件</p>
-<h2 id="六、取消订阅"><a href="#六、取消订阅" class="headerlink" title="六、取消订阅"></a>六、取消订阅</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">    protected void onDestroy() &#123;</span><br><span class="line">        if (!rxSbscription.isUnsubscribed())&#123;</span><br><span class="line">            rxSbscription.unsubscribe();</span><br><span class="line">        &#125;</span><br><span class="line">        super.onDestroy();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>参考：<br><a href="http://wuxiaolong.me/2016/04/07/rxbus/" target="_blank" rel="external">http://wuxiaolong.me/2016/04/07/rxbus/</a><br><a href="http://www.jianshu.com/p/ca090f6e2fe2" target="_blank" rel="external">http://www.jianshu.com/p/ca090f6e2fe2</a></p>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/03/01/RxBus的实现及简单使用/" rel="next" title="RxBus的实现及简单使用">
+                <i class="fa fa-chevron-left"></i> RxBus的实现及简单使用
+              </a>
+            
+          </div>
 
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
       
 
       
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -480,6 +378,14 @@
 
 
           
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/03/07/Android动态设置主题（使用RxBus模式）/"
+           data-title="Android动态设置主题（使用RxBus模式）" data-url="https://lingyunzhu.github.io/2016/03/07/Android动态设置主题（使用RxBus模式）/">
+      </div>
+    
+  </div>
+
 
         </div>
         
@@ -499,8 +405,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/image/image_avatar.png"
@@ -581,6 +496,17 @@
 
       </section>
 
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、定义主题颜色"><span class="nav-number">1.</span> <span class="nav-text">一、定义主题颜色</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、定义主题样式"><span class="nav-number">2.</span> <span class="nav-text">二、定义主题样式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、在需要的地方弹出主题选择对话框"><span class="nav-number">3.</span> <span class="nav-text">三、在需要的地方弹出主题选择对话框</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、主题选择框中颜色适配器及其xml"><span class="nav-number">4.</span> <span class="nav-text">四、主题选择框中颜色适配器及其xml</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、使用RxBus发布事件和处理事件"><span class="nav-number">5.</span> <span class="nav-text">五、使用RxBus发布事件和处理事件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六、用到的工具类"><span class="nav-number">6.</span> <span class="nav-text">六、用到的工具类</span></a></li></ol></div>
+            
+          </div>
+        </section>
       
 
     </div>
@@ -677,6 +603,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
 
   
 
