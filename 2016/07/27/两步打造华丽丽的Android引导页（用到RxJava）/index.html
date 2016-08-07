@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next muse use-motion">
+<html class="theme-next mist use-motion">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -98,8 +98,8 @@
 
 
 思路：思路其实很简单，就是在WelcomeActivity 中setContentView（）之前判断是否是首次打开APP，若是，则去启动引导页（WelcomeGuideActivity）并return；若不是，则直接setConten">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1372557-108a456b2b60943f.gif?imageMogr2/auto-orient/strip">
-<meta property="og:updated_time" content="2016-08-07T11:40:43.540Z">
+<meta property="og:image" content="http://7narbc.com1.z0.glb.clouddn.com/welcom.gif">
+<meta property="og:updated_time" content="2016-08-07T12:48:31.108Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="两步打造华丽丽的Android引导页（用到RxJava）">
 <meta name="twitter:description" content="上篇文章 ：RxJava实践之打造酷炫启动页中，我们尝试了用RxJava实现酷炫的启动页，今天我们再此基础上加入首次使用APP时的引导页功能。效果如下图：
@@ -107,14 +107,14 @@
 
 
 思路：思路其实很简单，就是在WelcomeActivity 中setContentView（）之前判断是否是首次打开APP，若是，则去启动引导页（WelcomeGuideActivity）并return；若不是，则直接setConten">
-<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/1372557-108a456b2b60943f.gif?imageMogr2/auto-orient/strip">
+<meta name="twitter:image" content="http://7narbc.com1.z0.glb.clouddn.com/welcom.gif">
 
 
 
 <script type="text/javascript" id="hexo.configuration">
   var NexT = window.NexT || {};
   var CONFIG = {
-    scheme: 'Muse',
+    scheme: 'Mist',
     sidebar: {"position":"left","display":"post"},
     fancybox: true,
     motion: true,
@@ -319,7 +319,7 @@
         <blockquote>
 <p>上篇文章 ：<a href="http://www.jianshu.com/p/d36ebec6edab" target="_blank" rel="external">RxJava实践之打造酷炫启动页</a>中，我们尝试了用RxJava实现酷炫的启动页，今天我们再此基础上加入首次使用APP时的引导页功能。效果如下图：</p>
 </blockquote>
-<center><br><img src="http://upload-images.jianshu.io/upload_images/1372557-108a456b2b60943f.gif?imageMogr2/auto-orient/strip" alt="welcome7.gif"><br></center>
+<center><br><img src="http://7narbc.com1.z0.glb.clouddn.com/welcom.gif" alt="welcome7.gif"><br></center>
 
 <p>思路：思路其实很简单，就是在WelcomeActivity 中setContentView（）之前判断是否是首次打开APP，若是，则去启动引导页（WelcomeGuideActivity）并return；若不是，则直接setContentView（），然后启动动画再启动MainActivity。</p>
 <h2 id="一、WelcomeActivity中判断是否是第一次启动"><a href="#一、WelcomeActivity中判断是否是第一次启动" class="headerlink" title="一、WelcomeActivity中判断是否是第一次启动"></a>一、WelcomeActivity中判断是否是第一次启动</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">protected void onCreate(Bundle savedInstanceState) &#123;</span><br><span class="line">    super.onCreate(savedInstanceState);</span><br><span class="line">    // 判断是否是第一次开启应用</span><br><span class="line">    boolean isFirstOpen = SharedPreferencesUtil.getBoolean(this, SharedPreferencesUtil.FIRST_OPEN, true);</span><br><span class="line">    // 如果是第一次启动，则先进入功能引导页</span><br><span class="line">    if (isFirstOpen) &#123;</span><br><span class="line">        Intent intent = new Intent(this, WelcomeGuideActivity.class);</span><br><span class="line">        startActivity(intent);</span><br><span class="line">        finish();</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 如果不是第一次启动app，则正常显示启动屏</span><br><span class="line">    setContentView(R.layout.activity_welcome);</span><br><span class="line">    ButterKnife.bind(this);</span><br><span class="line">    startMainActivity();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -546,7 +546,7 @@
 <div class="theme-info">
   主题 -
   <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
-    NexT.Muse
+    NexT.Mist
   </a>
 </div>
 

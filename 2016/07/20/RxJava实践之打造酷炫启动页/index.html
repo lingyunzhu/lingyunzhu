@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next muse use-motion">
+<html class="theme-next mist use-motion">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -96,22 +96,22 @@
 
 
 一、新建启动页WelcomeActivity注意，我们这里让WelcomeActivity继承Activity不要继承AppCompatActivity，因为AppCompatActivity会默认去加载主题，造成卡顿12345678    public class WelcomeActivity">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1372557-234ceacf62a9842f.gif?imageMogr2/auto-orient/strip">
-<meta property="og:updated_time" content="2016-08-07T11:41:42.922Z">
+<meta property="og:image" content="http://7narbc.com1.z0.glb.clouddn.com/mywelcome.gif">
+<meta property="og:updated_time" content="2016-08-07T12:47:51.369Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RxJava实践之打造酷炫启动页">
 <meta name="twitter:description" content="之前注意到coding APP启动页很是酷炫，今天我们使用RxJava和属性动画模仿实现其效果。
 
 
 一、新建启动页WelcomeActivity注意，我们这里让WelcomeActivity继承Activity不要继承AppCompatActivity，因为AppCompatActivity会默认去加载主题，造成卡顿12345678    public class WelcomeActivity">
-<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/1372557-234ceacf62a9842f.gif?imageMogr2/auto-orient/strip">
+<meta name="twitter:image" content="http://7narbc.com1.z0.glb.clouddn.com/mywelcome.gif">
 
 
 
 <script type="text/javascript" id="hexo.configuration">
   var NexT = window.NexT || {};
   var CONFIG = {
-    scheme: 'Muse',
+    scheme: 'Mist',
     sidebar: {"position":"left","display":"post"},
     fancybox: true,
     motion: true,
@@ -314,7 +314,7 @@
 
       
         <p>之前注意到coding APP启动页很是酷炫，今天我们使用RxJava和属性动画模仿实现其效果。</p>
-<center><br><img src="http://upload-images.jianshu.io/upload_images/1372557-234ceacf62a9842f.gif?imageMogr2/auto-orient/strip" alt="ezgif.com-video-to-gif(2).gif"><br></center>
+<center><br><img src="http://7narbc.com1.z0.glb.clouddn.com/mywelcome.gif" alt="ezgif.com-video-to-gif(2).gif"><br></center>
 
 <h2 id="一、新建启动页WelcomeActivity"><a href="#一、新建启动页WelcomeActivity" class="headerlink" title="一、新建启动页WelcomeActivity"></a>一、新建启动页WelcomeActivity</h2><p>注意，我们这里让WelcomeActivity继承Activity不要继承AppCompatActivity，因为AppCompatActivity会默认去加载主题，造成卡顿<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">    public class WelcomeActivity extends Activity &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onCreate(Bundle savedInstanceState) &#123;</span><br><span class="line">        super.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_welcome);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <h2 id="二、定义引导页布局activity-welcome-xml"><a href="#二、定义引导页布局activity-welcome-xml" class="headerlink" title="二、定义引导页布局activity_welcome.xml"></a>二、定义引导页布局activity_welcome.xml</h2><p>不多说直接上代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span><br><span class="line">&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;</span><br><span class="line">    android:layout_width=&quot;match_parent&quot;</span><br><span class="line">    android:layout_height=&quot;match_parent&quot;&gt;</span><br><span class="line"></span><br><span class="line">    &lt;ImageView</span><br><span class="line">        android:id=&quot;@+id/iv_entry&quot;</span><br><span class="line">        android:layout_width=&quot;match_parent&quot;</span><br><span class="line">        android:layout_height=&quot;match_parent&quot;</span><br><span class="line">        android:scaleType=&quot;fitXY&quot;</span><br><span class="line">        android:src=&quot;@drawable/welcomimg1&quot;/&gt;</span><br><span class="line"></span><br><span class="line">    &lt;View</span><br><span class="line">        android:layout_width=&quot;match_parent&quot;</span><br><span class="line">        android:layout_height=&quot;match_parent&quot;</span><br><span class="line">        android:background=&quot;@drawable/welcomimg_bg&quot;/&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &lt;TextView</span><br><span class="line">        android:layout_width=&quot;match_parent&quot;</span><br><span class="line">        android:layout_height=&quot;wrap_content&quot;</span><br><span class="line">        android:layout_alignParentBottom=&quot;true&quot;</span><br><span class="line">        android:layout_marginBottom=&quot;100dp&quot;</span><br><span class="line">        android:gravity=&quot;center&quot;</span><br><span class="line">        android:text=&quot;xialong&quot;</span><br><span class="line">        android:textColor=&quot;@android:color/white&quot;</span><br><span class="line">        android:textSize=&quot;23sp&quot;/&gt;</span><br><span class="line"></span><br><span class="line">    &lt;ImageView</span><br><span class="line">        android:layout_width=&quot;wrap_content&quot;</span><br><span class="line">        android:layout_height=&quot;wrap_content&quot;</span><br><span class="line">        android:src=&quot;@mipmap/google_logo&quot;</span><br><span class="line">        android:layout_alignParentBottom=&quot;true&quot;</span><br><span class="line">        android:layout_marginBottom=&quot;60dp&quot;</span><br><span class="line">        android:layout_centerInParent=&quot;true&quot;</span><br><span class="line">        android:tint=&quot;@android:color/white&quot; /&gt;</span><br><span class="line">&lt;/RelativeLayout&gt;</span><br></pre></td></tr></table></figure></p>
@@ -546,7 +546,7 @@
 <div class="theme-info">
   主题 -
   <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
-    NexT.Muse
+    NexT.Mist
   </a>
 </div>
 
