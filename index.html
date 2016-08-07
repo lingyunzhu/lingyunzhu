@@ -84,15 +84,15 @@
 
 
 
-<meta name="description" content="记录技术路上的点点滴滴">
+<meta name="description" content="探索Android">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Android猿">
 <meta property="og:url" content="https://lingyunzhu.github.io/index.html">
 <meta property="og:site_name" content="Android猿">
-<meta property="og:description" content="记录技术路上的点点滴滴">
+<meta property="og:description" content="探索Android">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android猿">
-<meta name="twitter:description" content="记录技术路上的点点滴滴">
+<meta name="twitter:description" content="探索Android">
 
 
 
@@ -226,6 +226,611 @@
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/27/两步打造华丽丽的Android引导页（用到RxJava）/" itemprop="url">
+                  两步打造华丽丽的Android引导页（用到RxJava）
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-27T00:00:00+00:00" content="2016-07-27">
+              2016-07-27
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/27/两步打造华丽丽的Android引导页（用到RxJava）/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/27/两步打造华丽丽的Android引导页（用到RxJava）/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/07/27/两步打造华丽丽的Android引导页（用到RxJava）/" class="leancloud_visitors" data-flag-title="两步打造华丽丽的Android引导页（用到RxJava）">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>上篇文章 ：<a href="http://www.jianshu.com/p/d36ebec6edab" target="_blank" rel="external">RxJava实践之打造酷炫启动页</a>中，我们尝试了用RxJava实现酷炫的启动页，今天我们再此基础上加入首次使用APP时的引导页功能。效果如下图：</p>
+</blockquote>
+<center><br><img src="http://upload-images.jianshu.io/upload_images/1372557-108a456b2b60943f.gif?imageMogr2/auto-orient/strip" alt="welcome7.gif"><br></center>
+
+<p>思路：思路其实很简单，就是在WelcomeActivity 中setContentView（）之前判断是否是首次打开APP，若是，则去启动引导页（WelcomeGuideActivity）并return；若不是，则直接setContentView（），然后启动动画再启动MainActivity。</p>
+<h2 id="一、WelcomeActivity中判断是否是第一次启动"><a href="#一、WelcomeActivity中判断是否是第一次启动" class="headerlink" title="一、WelcomeActivity中判断是否是第一次启动"></a>一、WelcomeActivity中判断是否是第一次启动</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">protected void onCreate(Bundle savedInstanceState) &#123;</span><br><span class="line">    super.onCreate(savedInstanceState);</span><br><span class="line">    // 判断是否是第一次开启应用</span><br><span class="line">    boolean isFirstOpen = SharedPreferencesUtil.getBoolean(this, SharedPreferencesUtil.FIRST_OPEN, true);</span><br><span class="line">    // 如果是第一次启动，则先进入功能引导页</span><br><span class="line">    if (isFirstOpen) &#123;</span><br><span class="line">        Intent intent = new Intent(this, WelcomeGuideActivity.class);</span><br><span class="line">        startActivity(intent);</span><br><span class="line">        finish();</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 如果不是第一次启动app，则正常显示启动屏</span><br><span class="line">    setContentView(R.layout.activity_welcome);</span><br><span class="line">    ButterKnife.bind(this);</span><br><span class="line">    startMainActivity();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们判断是否是第一次打开APP是用了SharedPreferences，我们这里对他进行了一下简单封装，代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Created by xialo on 2016/7/25.</span><br><span class="line"> */</span><br><span class="line">public class SharedPreferencesUtil &#123;</span><br><span class="line"></span><br><span class="line">    private static final String spFileName = &quot;welcomePage&quot;;</span><br><span class="line">    public static final String FIRST_OPEN = &quot;first_open&quot;;</span><br><span class="line"></span><br><span class="line">    public static Boolean getBoolean(Context context, String strKey,</span><br><span class="line">                                     Boolean strDefault) &#123;//strDefault	boolean: Value to return if this preference does not exist.</span><br><span class="line">        SharedPreferences setPreferences = context.getSharedPreferences(</span><br><span class="line">                spFileName, Context.MODE_PRIVATE);</span><br><span class="line">        Boolean result = setPreferences.getBoolean(strKey, strDefault);</span><br><span class="line">        return result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void putBoolean(Context context, String strKey,</span><br><span class="line">                                  Boolean strData) &#123;</span><br><span class="line">        SharedPreferences activityPreferences = context.getSharedPreferences(</span><br><span class="line">                spFileName, Context.MODE_PRIVATE);</span><br><span class="line">        SharedPreferences.Editor editor = activityPreferences.edit();</span><br><span class="line">        editor.putBoolean(strKey, strData);</span><br><span class="line">        editor.commit();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="二、WelcomeGuideActivity中，我们使用ViewPager以加载多个引导页面使其可以左右滑动"><a href="#二、WelcomeGuideActivity中，我们使用ViewPager以加载多个引导页面使其可以左右滑动" class="headerlink" title="二、WelcomeGuideActivity中，我们使用ViewPager以加载多个引导页面使其可以左右滑动"></a>二、WelcomeGuideActivity中，我们使用ViewPager以加载多个引导页面使其可以左右滑动</h2><p>不多说，请看WelcomeGuideActivity.java代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Created by xialo on 2016/7/25.</span><br><span class="line"> */</span><br><span class="line">public class WelcomeGuideActivity extends Activity implements View.OnClickListener &#123;</span><br><span class="line">    private ViewPager vp;</span><br><span class="line">    private GuideViewPagerAdapter adapter;</span><br><span class="line">    private List&lt;View&gt; views;</span><br><span class="line">    private Button startBtn;</span><br><span class="line"></span><br><span class="line">    // 引导页图片资源</span><br><span class="line">    private static final int[] pics = &#123; R.layout.guide_view1,</span><br><span class="line">            R.layout.guide_view2, R.layout.guide_view3&#125;;</span><br><span class="line"></span><br><span class="line">    // 底部小点图片</span><br><span class="line">    private ImageView[] dots;</span><br><span class="line"></span><br><span class="line">    // 记录当前选中位置</span><br><span class="line">    private int currentIndex;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onCreate(Bundle savedInstanceState) &#123;</span><br><span class="line">        super.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_guide);</span><br><span class="line"></span><br><span class="line">        views = new ArrayList&lt;View&gt;();</span><br><span class="line"></span><br><span class="line">        // 初始化引导页视图列表</span><br><span class="line">        for (int i = 0; i &lt; pics.length; i++) &#123;</span><br><span class="line">            View view = LayoutInflater.from(this).inflate(pics[i], null);</span><br><span class="line"></span><br><span class="line">            if (i == pics.length - 1) &#123;</span><br><span class="line">                startBtn = (Button) view.findViewById(R.id.btn_enter);</span><br><span class="line">                startBtn.setTag(&quot;enter&quot;);</span><br><span class="line">                startBtn.setOnClickListener(this);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            views.add(view);</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        vp = (ViewPager) findViewById(R.id.vp_guide);</span><br><span class="line">        adapter = new GuideViewPagerAdapter(views);</span><br><span class="line">        vp.setAdapter(adapter);</span><br><span class="line">        vp.addOnPageChangeListener(new PageChangeListener());</span><br><span class="line"></span><br><span class="line">        initDots();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onResume() &#123;</span><br><span class="line">        super.onResume();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onPause() &#123;</span><br><span class="line">        super.onPause();</span><br><span class="line">        // 如果切换到后台，就设置下次不进入功能引导页</span><br><span class="line">        SharedPreferencesUtil.putBoolean(WelcomeGuideActivity.this, SharedPreferencesUtil.FIRST_OPEN, false);</span><br><span class="line">        finish();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onStop() &#123;</span><br><span class="line">        super.onStop();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onDestroy() &#123;</span><br><span class="line">        super.onDestroy();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void initDots() &#123;</span><br><span class="line">        LinearLayout ll = (LinearLayout) findViewById(R.id.ll);</span><br><span class="line">        dots = new ImageView[pics.length];</span><br><span class="line"></span><br><span class="line">        // 循环取得小点图片</span><br><span class="line">        for (int i = 0; i &lt; pics.length; i++) &#123;</span><br><span class="line">            // 得到一个LinearLayout下面的每一个子元素</span><br><span class="line">            dots[i] = (ImageView) ll.getChildAt(i);</span><br><span class="line">            dots[i].setEnabled(false);// 都设为灰色</span><br><span class="line">            dots[i].setOnClickListener(this);</span><br><span class="line">            dots[i].setTag(i);// 设置位置tag，方便取出与当前位置对应</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        currentIndex = 0;</span><br><span class="line">        dots[currentIndex].setEnabled(true); // 设置为白色，即选中状态</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 设置当前view</span><br><span class="line">     *</span><br><span class="line">     * @param position</span><br><span class="line">     */</span><br><span class="line">    private void setCurView(int position) &#123;</span><br><span class="line">        if (position &lt; 0 || position &gt;= pics.length) &#123;</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        vp.setCurrentItem(position);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 设置当前指示点</span><br><span class="line">     *</span><br><span class="line">     * @param position</span><br><span class="line">     */</span><br><span class="line">    private void setCurDot(int position) &#123;</span><br><span class="line">        if (position &lt; 0 || position &gt; pics.length || currentIndex == position) &#123;</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        dots[position].setEnabled(true);</span><br><span class="line">        dots[currentIndex].setEnabled(false);</span><br><span class="line">        currentIndex = position;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onClick(View v) &#123;</span><br><span class="line">        if (v.getTag().equals(&quot;enter&quot;)) &#123;</span><br><span class="line">            enterMainActivity();</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        int position = (Integer) v.getTag();</span><br><span class="line">        setCurView(position);</span><br><span class="line">        setCurDot(position);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    private void enterMainActivity() &#123;</span><br><span class="line">        Intent intent = new Intent(WelcomeGuideActivity.this,</span><br><span class="line">                WelcomeActivity.class);</span><br><span class="line">        startActivity(intent);</span><br><span class="line">        SharedPreferencesUtil.putBoolean(WelcomeGuideActivity.this, SharedPreferencesUtil.FIRST_OPEN, false);</span><br><span class="line">        finish();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private class PageChangeListener implements ViewPager.OnPageChangeListener &#123;</span><br><span class="line">        @Override</span><br><span class="line">        public void onPageScrollStateChanged(int position) &#123;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public void onPageScrolled(int position, float arg1, int arg2) &#123;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public void onPageSelected(int position) &#123;</span><br><span class="line">            // 设置底部小点选中状态</span><br><span class="line">            setCurDot(position);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们用了三个页面guide_view1、guide_view2、guide_view3作为引导页面，布局类似，只是guide_view3多了个点击进入的Button。以下是guide_view3.xml<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span><br><span class="line">&lt;FrameLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;</span><br><span class="line">    android:layout_width=&quot;match_parent&quot;</span><br><span class="line">    android:layout_height=&quot;match_parent&quot; &gt;</span><br><span class="line"></span><br><span class="line">    &lt;ImageView</span><br><span class="line">        android:layout_width=&quot;match_parent&quot;</span><br><span class="line">        android:layout_height=&quot;match_parent&quot;</span><br><span class="line">        android:scaleType=&quot;centerCrop&quot;</span><br><span class="line">        android:src=&quot;@mipmap/guide_img3&quot; /&gt;</span><br><span class="line">    &lt;Button</span><br><span class="line">        android:id=&quot;@+id/btn_enter&quot;</span><br><span class="line">        android:layout_width=&quot;100dp&quot;</span><br><span class="line">        android:layout_height=&quot;26dp&quot;</span><br><span class="line">        android:layout_gravity=&quot;bottom|center_horizontal&quot;</span><br><span class="line">        android:layout_marginBottom=&quot;75dp&quot;</span><br><span class="line">        android:background=&quot;@drawable/button_shape&quot;</span><br><span class="line">        android:text=&quot;@string/entry&quot;</span><br><span class="line">        android:textColor=&quot;@color/white&quot;</span><br><span class="line">        android:textSize=&quot;18sp&quot;</span><br><span class="line">        android:visibility=&quot;visible&quot; /&gt;</span><br><span class="line"></span><br><span class="line">&lt;/FrameLayout&gt;</span><br></pre></td></tr></table></figure></p>
+<p>WelcomeGuideActivity中值得注意的是该Button点击事件的处理，在点击Button后我们并没有直接进入MainActivity，而是先把SharedPreferences中标记是否第一次进入的布尔值设为false，而后再次进入WelcomeActivity，此时WelcomeActivity会直接setContentView（）然后启动动画，进入MainActivity。</p>
+<p>以上，我们华丽丽的引导页就完成了，需要完整代码的请戳 <a href="https://github.com/lingyunzhu/WelcomPage.git" target="_blank" rel="external">代码传送门</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/20/RxJava实践之打造酷炫启动页/" itemprop="url">
+                  RxJava实践之打造酷炫启动页
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-20T00:00:00+00:00" content="2016-07-20">
+              2016-07-20
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/20/RxJava实践之打造酷炫启动页/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/20/RxJava实践之打造酷炫启动页/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/07/20/RxJava实践之打造酷炫启动页/" class="leancloud_visitors" data-flag-title="RxJava实践之打造酷炫启动页">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>之前注意到coding APP启动页很是酷炫，今天我们使用RxJava和属性动画模仿实现其效果。</p>
+<center><br><img src="http://upload-images.jianshu.io/upload_images/1372557-234ceacf62a9842f.gif?imageMogr2/auto-orient/strip" alt="ezgif.com-video-to-gif(2).gif"><br></center>
+
+<h2 id="一、新建启动页WelcomeActivity"><a href="#一、新建启动页WelcomeActivity" class="headerlink" title="一、新建启动页WelcomeActivity"></a>一、新建启动页WelcomeActivity</h2><p>注意，我们这里让WelcomeActivity继承Activity不要继承AppCompatActivity，因为AppCompatActivity会默认去加载主题，造成卡顿<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">    public class WelcomeActivity extends Activity &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onCreate(Bundle savedInstanceState) &#123;</span><br><span class="line">        super.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_welcome);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="二、定义引导页布局activity-welcome-xml"><a href="#二、定义引导页布局activity-welcome-xml" class="headerlink" title="二、定义引导页布局activity_welcome.xml"></a>二、定义引导页布局activity_welcome.xml</h2><p>不多说直接上代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span><br><span class="line">&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;</span><br><span class="line">    android:layout_width=&quot;match_parent&quot;</span><br><span class="line">    android:layout_height=&quot;match_parent&quot;&gt;</span><br><span class="line"></span><br><span class="line">    &lt;ImageView</span><br><span class="line">        android:id=&quot;@+id/iv_entry&quot;</span><br><span class="line">        android:layout_width=&quot;match_parent&quot;</span><br><span class="line">        android:layout_height=&quot;match_parent&quot;</span><br><span class="line">        android:scaleType=&quot;fitXY&quot;</span><br><span class="line">        android:src=&quot;@drawable/welcomimg1&quot;/&gt;</span><br><span class="line"></span><br><span class="line">    &lt;View</span><br><span class="line">        android:layout_width=&quot;match_parent&quot;</span><br><span class="line">        android:layout_height=&quot;match_parent&quot;</span><br><span class="line">        android:background=&quot;@drawable/welcomimg_bg&quot;/&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &lt;TextView</span><br><span class="line">        android:layout_width=&quot;match_parent&quot;</span><br><span class="line">        android:layout_height=&quot;wrap_content&quot;</span><br><span class="line">        android:layout_alignParentBottom=&quot;true&quot;</span><br><span class="line">        android:layout_marginBottom=&quot;100dp&quot;</span><br><span class="line">        android:gravity=&quot;center&quot;</span><br><span class="line">        android:text=&quot;xialong&quot;</span><br><span class="line">        android:textColor=&quot;@android:color/white&quot;</span><br><span class="line">        android:textSize=&quot;23sp&quot;/&gt;</span><br><span class="line"></span><br><span class="line">    &lt;ImageView</span><br><span class="line">        android:layout_width=&quot;wrap_content&quot;</span><br><span class="line">        android:layout_height=&quot;wrap_content&quot;</span><br><span class="line">        android:src=&quot;@mipmap/google_logo&quot;</span><br><span class="line">        android:layout_alignParentBottom=&quot;true&quot;</span><br><span class="line">        android:layout_marginBottom=&quot;60dp&quot;</span><br><span class="line">        android:layout_centerInParent=&quot;true&quot;</span><br><span class="line">        android:tint=&quot;@android:color/white&quot; /&gt;</span><br><span class="line">&lt;/RelativeLayout&gt;</span><br></pre></td></tr></table></figure></p>
+<p>这里我们用了相对布局，在ImageView上覆盖一个View，该View用渐变色背景welcomimg_bg.xml以暗化图片，welcomimg_bg.xml代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span><br><span class="line">&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;&gt;</span><br><span class="line"></span><br><span class="line">    &lt;gradient</span><br><span class="line">        android:angle=&quot;90&quot;</span><br><span class="line">        android:startColor=&quot;@color/black&quot;</span><br><span class="line">        android:endColor=&quot;@android:color/transparent&quot;</span><br><span class="line">        /&gt;</span><br><span class="line"></span><br><span class="line">&lt;/shape&gt;</span><br></pre></td></tr></table></figure></p>
+<p>其中startColor表示起始颜色，endColor表示结束颜色，angle=90 表示颜色从下往上渐变。</p>
+<h2 id="三、随机选取图片并使用RxJava启动动画"><a href="#三、随机选取图片并使用RxJava启动动画" class="headerlink" title="三、随机选取图片并使用RxJava启动动画"></a>三、随机选取图片并使用RxJava启动动画</h2><p>最后我们的WelcomeActivity.java长这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">public class WelcomeActivity extends Activity &#123;</span><br><span class="line"></span><br><span class="line">    @Bind(R.id.iv_entry)</span><br><span class="line">    ImageView mIVEntry;</span><br><span class="line"></span><br><span class="line">    private static final int ANIM_TIME = 2000;</span><br><span class="line"></span><br><span class="line">    private static final float SCALE_END = 1.15F;</span><br><span class="line"></span><br><span class="line">    private static final int[] Imgs=&#123;</span><br><span class="line">            R.drawable.welcomimg1,R.drawable.welcomimg2,</span><br><span class="line">            R.drawable.welcomimg3,R.drawable.welcomimg4,</span><br><span class="line">            R.drawable.welcomimg5, R.drawable.welcomimg6,</span><br><span class="line">            R.drawable.welcomimg7,R.drawable.welcomimg8,</span><br><span class="line">            R.drawable.welcomimg9,R.drawable.welcomimg10,</span><br><span class="line">            R.drawable.welcomimg11,R.drawable.welcomimg12,&#125;;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onCreate(Bundle savedInstanceState) &#123;</span><br><span class="line">        super.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_welcome);</span><br><span class="line">        ButterKnife.bind(this);</span><br><span class="line"></span><br><span class="line">        Random random = new Random(SystemClock.elapsedRealtime());//SystemClock.elapsedRealtime() 从开机到现在的毫秒数（手机睡眠(sleep)的时间也包括在内）</span><br><span class="line">        mIVEntry.setImageResource(Imgs[random.nextInt(Imgs.length)]);</span><br><span class="line"></span><br><span class="line">        Observable.timer(1000, TimeUnit.MILLISECONDS)</span><br><span class="line">                .observeOn(AndroidSchedulers.mainThread())</span><br><span class="line">                .subscribe(new Action1&lt;Long&gt;()</span><br><span class="line">                &#123;</span><br><span class="line"></span><br><span class="line">                    @Override</span><br><span class="line">                    public void call(Long aLong)</span><br><span class="line">                    &#123;</span><br><span class="line">                        startAnim();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    private void startAnim() &#123;</span><br><span class="line"></span><br><span class="line">        ObjectAnimator animatorX = ObjectAnimator.ofFloat(mIVEntry, &quot;scaleX&quot;, 1f, SCALE_END);</span><br><span class="line">        ObjectAnimator animatorY = ObjectAnimator.ofFloat(mIVEntry, &quot;scaleY&quot;, 1f, SCALE_END);</span><br><span class="line"></span><br><span class="line">        AnimatorSet set = new AnimatorSet();</span><br><span class="line">        set.setDuration(ANIM_TIME).play(animatorX).with(animatorY);</span><br><span class="line">        set.start();</span><br><span class="line"></span><br><span class="line">        set.addListener(new AnimatorListenerAdapter()</span><br><span class="line">        &#123;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            public void onAnimationEnd(Animator animation)</span><br><span class="line">            &#123;</span><br><span class="line"></span><br><span class="line">                startActivity(new Intent(WelcomeActivity.this, MainActivity.class));</span><br><span class="line">                WelcomeActivity.this.finish();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里的RxJava使用了timer操作符，它的意思是延迟执行某个操作，第一个参数表示延迟时间，第二个参数是时间单位。<br>好了，就酱。</p>
+<p>需要完整代码可以戳这里<a href="https://github.com/lingyunzhu/WelcomPage.git" target="_blank" rel="external">代码传送门</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/05/23/Android studio最实用快捷键/" itemprop="url">
+                  Android Studio最实用快捷键
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-05-23T00:00:00+00:00" content="2016-05-23">
+              2016-05-23
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/05/23/Android studio最实用快捷键/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/23/Android studio最实用快捷键/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/05/23/Android studio最实用快捷键/" class="leancloud_visitors" data-flag-title="Android Studio最实用快捷键">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>之前都是用习惯了eclipse的快捷键，从去年（2015）10月份使用Android studio到现在也基本习惯了AS的快捷键，反而越来越感觉AS的快捷键比eclipse强大太多，今天周末就把自己平时最常用的AS快捷键总结出。</p>
+</blockquote>
+<h2 id="一-Log相关"><a href="#一-Log相关" class="headerlink" title="一.Log相关"></a>一.Log相关</h2><ul>
+<li>生成TAG<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">logt</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>效果：</p>
+<center><br><img src="http://upload-images.jianshu.io/upload_images/1372557-c6a5f3eb98828227.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="TAG.png"><br></center>
+
+
+<ul>
+<li>打印方法中参数<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">logm</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>效果：</p>
+<center><br><img src="http://upload-images.jianshu.io/upload_images/1372557-9320b50a37cea551.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="logm.png"><br></center>
+
+<ul>
+<li><p>打印log.d()</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">logd</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>打印log.e()</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">loge</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>打印其他级别的Log以此类推。</p>
+<h2 id="二-代码提示"><a href="#二-代码提示" class="headerlink" title="二.代码提示"></a>二.代码提示</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Ctrl + Alt +Space （空格键）</span><br></pre></td></tr></table></figure>
+<h2 id="三-代码移动"><a href="#三-代码移动" class="headerlink" title="三.代码移动"></a>三.代码移动</h2><ul>
+<li><p>选中代码，连续按会选中更多</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Ctrl + W</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>复制当前行到下一行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Ctrl + D</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>剪切</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Ctrl + X</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>删除</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Ctrl + Y</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>代码向上/下移动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Ctrl + Shift+ Up/Down</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在类中的方法间移动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Alt + Up/Down</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>代码向上/下移动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Ctrl + Shift+ Up/Down</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="四-代码查看"><a href="#四-代码查看" class="headerlink" title="四.代码查看"></a>四.代码查看</h2><ul>
+<li><p>打开一个文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Ctrl + Shift+ N</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>打开一个类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Ctrl + N</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看一个变量的声明</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Ctrl + B    //效果同Ctrl + 左击鼠标</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看一个类的父类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Ctrl + U</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看一个方法的调用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Ctrl + Alt + H</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在类中查看一个方法的实现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Ctrl + Shift + i</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>显示类结构图</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Ctrl +  H</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>代码返回快捷键</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Alt + 向左箭头</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>代码展示折叠、展开</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Ctrl + -/+</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>隐藏/打开工程面板</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Alt + 1</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>高亮错误或警告快速定位</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">F2</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查找类中的方法或变量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Ctrl + Shift + Alt + N</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>显示当前文件结构</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Ctrl + F12</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>复写父类方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Ctrl + O</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>给选中的代码块添加if、for、try/catch等语句</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Ctrl + Alt + T</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="五-代码生成"><a href="#五-代码生成" class="headerlink" title="五.代码生成"></a>五.代码生成</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Ctrl + J       //可生成 if、for、foreach、findViewById、View.Gone、Toast等代码</span><br></pre></td></tr></table></figure>
+<center><br><img src="http://upload-images.jianshu.io/upload_images/1372557-8f7e3f5bda572480.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Ctrl+j.png"><br></center>
+
+<h2 id="六-代码查找、替换"><a href="#六-代码查找、替换" class="headerlink" title="六.代码查找、替换"></a>六.代码查找、替换</h2><ul>
+<li><p>查找文本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Ctrl + F</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>替换文本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Ctrl + R</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="七-代码格式化"><a href="#七-代码格式化" class="headerlink" title="七.代码格式化"></a>七.代码格式化</h2><p>*代码格式化<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Ctrl + Shift + L</span><br></pre></td></tr></table></figure></p>
+<p>以上，欢迎交流补充。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/05/06/Android屏幕录制并转换gif/" itemprop="url">
+                  Android屏幕录制并转换gif
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-05-06T00:00:00+00:00" content="2016-05-06">
+              2016-05-06
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/05/06/Android屏幕录制并转换gif/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/06/Android屏幕录制并转换gif/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/05/06/Android屏幕录制并转换gif/" class="leancloud_visitors" data-flag-title="Android屏幕录制并转换gif">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>最近需要手机录制gif图片，找了好多软件也没理想的，最后确定了先通过命令screenrecord 录制MP4视频再转gif的方案。分享出来和大家交流，谁有更好的方案请告诉我（啧啧，这像钓鱼贴）。</p>
+</blockquote>
+<p>之前没注意到Android studio的Android Monitor选项卡有个录制视频的按钮，经@<a href="http://www.jianshu.com/users/c073ed419d1a" target="_blank" rel="external">一息尚存</a>和@<a href="http://www.jianshu.com/users/320f9e8f7fc9" target="_blank" rel="external">Wing_Li</a>提醒才发现还真有这么个东东（AS真人性化，有木有觉得啊）。如下图</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1372557-7e6539ebbb8e9546.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="studioscreenrecord.png"></p>
+<p>不习惯用命令方式的可以直接点击那个按钮录制视频。下面介绍命令的方式。</p>
+<h1 id="screenrecord-命令介绍"><a href="#screenrecord-命令介绍" class="headerlink" title="screenrecord 命令介绍"></a>screenrecord 命令介绍</h1><p>Android4.4(API level 19)以上支持screenrecord命令，首先我们在Android studio中打开terminal</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1372557-591f1ce7580fd897.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="terminal.png"></p>
+<p>输入<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb shell screenrecord --help</span><br></pre></td></tr></table></figure></p>
+<p>看到如下结果，详细解释看后面<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\xialo\Desktop\WelcomPage&gt;adb shell screenrecord --help</span><br><span class="line">Usage: screenrecord [options] &lt;filename&gt;  </span><br><span class="line"></span><br><span class="line">Records the device&apos;s display to a .mp4 file.  </span><br><span class="line"></span><br><span class="line">Options:</span><br><span class="line">--size WIDTHxHEIGHT</span><br><span class="line">    Set the video size, e.g. &quot;1280x720&quot;.  Default is the device&apos;s main</span><br><span class="line">    display resolution (if supported), 1280x720 if not.  For best results,</span><br><span class="line">    use a size supported by the AVC encoder.</span><br><span class="line">--bit-rate RATE</span><br><span class="line">    Set the video bit rate, in megabits per second.  Default 4Mbps.</span><br><span class="line">--time-limit TIME</span><br><span class="line">    Set the maximum recording time, in seconds.  Default / maximum is 180.</span><br><span class="line">--rotate</span><br><span class="line">    Rotate the output 90 degrees.</span><br><span class="line">--verbose</span><br><span class="line">    Display interesting information on stdout.</span><br><span class="line">--help</span><br><span class="line">    Show this message.</span><br><span class="line"></span><br><span class="line">Recording continues until Ctrl-C is hit or the time limit is reached.</span><br></pre></td></tr></table></figure></p>
+<p>由上面我们看出，screenrecord基本的使用方式为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">screenrecord [options] &lt;filename&gt;</span><br></pre></td></tr></table></figure></p>
+<p>其中options是可选参数，主要包含：–size，–bit-rate，–time-limit，–rotate，–verbose，–help等。下面简单示例常用参数的使用：</p>
+<ul>
+<li>–size  指定视频分辨率大小<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb shell screenrecord --size 1280x720 /sdcard/test.mp4</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>说明:录制视频，分辨率为1280x720(注意，这里是字母x,不是星号，否则会出错)，如果不指定默认使用手机的分辨率,为获得最佳效果，请使用设备上的高级视频编码（AVC）支持的大小</p>
+<ul>
+<li>–bit-rate  指定视频的比特率<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb shell screenrecord --bit-rate 5000000 /sdcard/test.mp4</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>说明:指定视频的比特率为5Mbps,如果不指定,默认为4Mbps. 你可以增加比特率以提高视频质量或为了让文件更小而降低比特率</p>
+<ul>
+<li>–time-limit  限制录制时间<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb shell screenrecord  --time-limit 30 /sdcard/demo.mp4</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>说明:限制视频录制时间为30s,如果不限制,默认180s</p>
+<hr>
+<h1 id="用screenrecord-命令录制视频"><a href="#用screenrecord-命令录制视频" class="headerlink" title="用screenrecord 命令录制视频"></a>用screenrecord 命令录制视频</h1><p>我们用USB链接手机，继续在Android studio的terminal中输入命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb shell screenrecord --size 480x640 /sdcard/test.mp4</span><br></pre></td></tr></table></figure></p>
+<p>这里我们没有指定录制时间，所以录制完成后点击关闭terminal即可，这时，我们的SD卡根目录会出现刚刚录制的视频test.mp4</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1372557-65b4f8c8e5a8800e.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="test.jpg"></p>
+<hr>
+<h1 id="mp4转gif"><a href="#mp4转gif" class="headerlink" title="mp4转gif"></a>mp4转gif</h1><p>这里我们用<a href="http://ezgif.com/" target="_blank" rel="external">http://ezgif.com/</a> 在线将mp4转换为gif，傻瓜式操作，这里不再赘述。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1372557-672bc541219c6c23.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="mp4togif.png"></p>
+<p>收工。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
     
       
 
@@ -506,12 +1111,12 @@
                src="/image/image_avatar.png"
                alt="xialong" />
           <p class="site-author-name" itemprop="name">xialong</p>
-          <p class="site-description motion-element" itemprop="description">记录技术路上的点点滴滴</p>
+          <p class="site-description motion-element" itemprop="description">探索Android</p>
         </div>
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">2</span>
+              <span class="site-state-item-count">6</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -521,7 +1126,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-count">4</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

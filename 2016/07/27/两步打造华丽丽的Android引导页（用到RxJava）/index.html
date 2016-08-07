@@ -1,0 +1,772 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="RxJava Android引导页," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="上篇文章 ：RxJava实践之打造酷炫启动页中，我们尝试了用RxJava实现酷炫的启动页，今天我们再此基础上加入首次使用APP时的引导页功能。效果如下图：
+
+
+
+思路：思路其实很简单，就是在WelcomeActivity 中setContentView（）之前判断是否是首次打开APP，若是，则去启动引导页（WelcomeGuideActivity）并return；若不是，则直接setConten">
+<meta property="og:type" content="article">
+<meta property="og:title" content="两步打造华丽丽的Android引导页（用到RxJava）">
+<meta property="og:url" content="https://lingyunzhu.github.io/2016/07/27/两步打造华丽丽的Android引导页（用到RxJava）/index.html">
+<meta property="og:site_name" content="Android猿">
+<meta property="og:description" content="上篇文章 ：RxJava实践之打造酷炫启动页中，我们尝试了用RxJava实现酷炫的启动页，今天我们再此基础上加入首次使用APP时的引导页功能。效果如下图：
+
+
+
+思路：思路其实很简单，就是在WelcomeActivity 中setContentView（）之前判断是否是首次打开APP，若是，则去启动引导页（WelcomeGuideActivity）并return；若不是，则直接setConten">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1372557-108a456b2b60943f.gif?imageMogr2/auto-orient/strip">
+<meta property="og:updated_time" content="2016-08-07T11:40:43.540Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="两步打造华丽丽的Android引导页（用到RxJava）">
+<meta name="twitter:description" content="上篇文章 ：RxJava实践之打造酷炫启动页中，我们尝试了用RxJava实现酷炫的启动页，今天我们再此基础上加入首次使用APP时的引导页功能。效果如下图：
+
+
+
+思路：思路其实很简单，就是在WelcomeActivity 中setContentView（）之前判断是否是首次打开APP，若是，则去启动引导页（WelcomeGuideActivity）并return；若不是，则直接setConten">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/1372557-108a456b2b60943f.gif?imageMogr2/auto-orient/strip">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="https://lingyunzhu.github.io/2016/07/27/两步打造华丽丽的Android引导页（用到RxJava）/"/>
+
+  <title> 两步打造华丽丽的Android引导页（用到RxJava） | Android猿 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?db7683cd78829a9eddcee9c7f940d024";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Android猿</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Do one thing at a time,and do well.</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                两步打造华丽丽的Android引导页（用到RxJava）
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-27T08:00:00+08:00" content="2016-07-27">
+              2016-07-27
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/27/两步打造华丽丽的Android引导页（用到RxJava）/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/27/两步打造华丽丽的Android引导页（用到RxJava）/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/07/27/两步打造华丽丽的Android引导页（用到RxJava）/" class="leancloud_visitors" data-flag-title="两步打造华丽丽的Android引导页（用到RxJava）">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>上篇文章 ：<a href="http://www.jianshu.com/p/d36ebec6edab" target="_blank" rel="external">RxJava实践之打造酷炫启动页</a>中，我们尝试了用RxJava实现酷炫的启动页，今天我们再此基础上加入首次使用APP时的引导页功能。效果如下图：</p>
+</blockquote>
+<center><br><img src="http://upload-images.jianshu.io/upload_images/1372557-108a456b2b60943f.gif?imageMogr2/auto-orient/strip" alt="welcome7.gif"><br></center>
+
+<p>思路：思路其实很简单，就是在WelcomeActivity 中setContentView（）之前判断是否是首次打开APP，若是，则去启动引导页（WelcomeGuideActivity）并return；若不是，则直接setContentView（），然后启动动画再启动MainActivity。</p>
+<h2 id="一、WelcomeActivity中判断是否是第一次启动"><a href="#一、WelcomeActivity中判断是否是第一次启动" class="headerlink" title="一、WelcomeActivity中判断是否是第一次启动"></a>一、WelcomeActivity中判断是否是第一次启动</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">protected void onCreate(Bundle savedInstanceState) &#123;</span><br><span class="line">    super.onCreate(savedInstanceState);</span><br><span class="line">    // 判断是否是第一次开启应用</span><br><span class="line">    boolean isFirstOpen = SharedPreferencesUtil.getBoolean(this, SharedPreferencesUtil.FIRST_OPEN, true);</span><br><span class="line">    // 如果是第一次启动，则先进入功能引导页</span><br><span class="line">    if (isFirstOpen) &#123;</span><br><span class="line">        Intent intent = new Intent(this, WelcomeGuideActivity.class);</span><br><span class="line">        startActivity(intent);</span><br><span class="line">        finish();</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 如果不是第一次启动app，则正常显示启动屏</span><br><span class="line">    setContentView(R.layout.activity_welcome);</span><br><span class="line">    ButterKnife.bind(this);</span><br><span class="line">    startMainActivity();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们判断是否是第一次打开APP是用了SharedPreferences，我们这里对他进行了一下简单封装，代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Created by xialo on 2016/7/25.</span><br><span class="line"> */</span><br><span class="line">public class SharedPreferencesUtil &#123;</span><br><span class="line"></span><br><span class="line">    private static final String spFileName = &quot;welcomePage&quot;;</span><br><span class="line">    public static final String FIRST_OPEN = &quot;first_open&quot;;</span><br><span class="line"></span><br><span class="line">    public static Boolean getBoolean(Context context, String strKey,</span><br><span class="line">                                     Boolean strDefault) &#123;//strDefault	boolean: Value to return if this preference does not exist.</span><br><span class="line">        SharedPreferences setPreferences = context.getSharedPreferences(</span><br><span class="line">                spFileName, Context.MODE_PRIVATE);</span><br><span class="line">        Boolean result = setPreferences.getBoolean(strKey, strDefault);</span><br><span class="line">        return result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void putBoolean(Context context, String strKey,</span><br><span class="line">                                  Boolean strData) &#123;</span><br><span class="line">        SharedPreferences activityPreferences = context.getSharedPreferences(</span><br><span class="line">                spFileName, Context.MODE_PRIVATE);</span><br><span class="line">        SharedPreferences.Editor editor = activityPreferences.edit();</span><br><span class="line">        editor.putBoolean(strKey, strData);</span><br><span class="line">        editor.commit();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="二、WelcomeGuideActivity中，我们使用ViewPager以加载多个引导页面使其可以左右滑动"><a href="#二、WelcomeGuideActivity中，我们使用ViewPager以加载多个引导页面使其可以左右滑动" class="headerlink" title="二、WelcomeGuideActivity中，我们使用ViewPager以加载多个引导页面使其可以左右滑动"></a>二、WelcomeGuideActivity中，我们使用ViewPager以加载多个引导页面使其可以左右滑动</h2><p>不多说，请看WelcomeGuideActivity.java代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Created by xialo on 2016/7/25.</span><br><span class="line"> */</span><br><span class="line">public class WelcomeGuideActivity extends Activity implements View.OnClickListener &#123;</span><br><span class="line">    private ViewPager vp;</span><br><span class="line">    private GuideViewPagerAdapter adapter;</span><br><span class="line">    private List&lt;View&gt; views;</span><br><span class="line">    private Button startBtn;</span><br><span class="line"></span><br><span class="line">    // 引导页图片资源</span><br><span class="line">    private static final int[] pics = &#123; R.layout.guide_view1,</span><br><span class="line">            R.layout.guide_view2, R.layout.guide_view3&#125;;</span><br><span class="line"></span><br><span class="line">    // 底部小点图片</span><br><span class="line">    private ImageView[] dots;</span><br><span class="line"></span><br><span class="line">    // 记录当前选中位置</span><br><span class="line">    private int currentIndex;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onCreate(Bundle savedInstanceState) &#123;</span><br><span class="line">        super.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_guide);</span><br><span class="line"></span><br><span class="line">        views = new ArrayList&lt;View&gt;();</span><br><span class="line"></span><br><span class="line">        // 初始化引导页视图列表</span><br><span class="line">        for (int i = 0; i &lt; pics.length; i++) &#123;</span><br><span class="line">            View view = LayoutInflater.from(this).inflate(pics[i], null);</span><br><span class="line"></span><br><span class="line">            if (i == pics.length - 1) &#123;</span><br><span class="line">                startBtn = (Button) view.findViewById(R.id.btn_enter);</span><br><span class="line">                startBtn.setTag(&quot;enter&quot;);</span><br><span class="line">                startBtn.setOnClickListener(this);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            views.add(view);</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        vp = (ViewPager) findViewById(R.id.vp_guide);</span><br><span class="line">        adapter = new GuideViewPagerAdapter(views);</span><br><span class="line">        vp.setAdapter(adapter);</span><br><span class="line">        vp.addOnPageChangeListener(new PageChangeListener());</span><br><span class="line"></span><br><span class="line">        initDots();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onResume() &#123;</span><br><span class="line">        super.onResume();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onPause() &#123;</span><br><span class="line">        super.onPause();</span><br><span class="line">        // 如果切换到后台，就设置下次不进入功能引导页</span><br><span class="line">        SharedPreferencesUtil.putBoolean(WelcomeGuideActivity.this, SharedPreferencesUtil.FIRST_OPEN, false);</span><br><span class="line">        finish();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onStop() &#123;</span><br><span class="line">        super.onStop();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onDestroy() &#123;</span><br><span class="line">        super.onDestroy();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void initDots() &#123;</span><br><span class="line">        LinearLayout ll = (LinearLayout) findViewById(R.id.ll);</span><br><span class="line">        dots = new ImageView[pics.length];</span><br><span class="line"></span><br><span class="line">        // 循环取得小点图片</span><br><span class="line">        for (int i = 0; i &lt; pics.length; i++) &#123;</span><br><span class="line">            // 得到一个LinearLayout下面的每一个子元素</span><br><span class="line">            dots[i] = (ImageView) ll.getChildAt(i);</span><br><span class="line">            dots[i].setEnabled(false);// 都设为灰色</span><br><span class="line">            dots[i].setOnClickListener(this);</span><br><span class="line">            dots[i].setTag(i);// 设置位置tag，方便取出与当前位置对应</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        currentIndex = 0;</span><br><span class="line">        dots[currentIndex].setEnabled(true); // 设置为白色，即选中状态</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 设置当前view</span><br><span class="line">     *</span><br><span class="line">     * @param position</span><br><span class="line">     */</span><br><span class="line">    private void setCurView(int position) &#123;</span><br><span class="line">        if (position &lt; 0 || position &gt;= pics.length) &#123;</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        vp.setCurrentItem(position);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 设置当前指示点</span><br><span class="line">     *</span><br><span class="line">     * @param position</span><br><span class="line">     */</span><br><span class="line">    private void setCurDot(int position) &#123;</span><br><span class="line">        if (position &lt; 0 || position &gt; pics.length || currentIndex == position) &#123;</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        dots[position].setEnabled(true);</span><br><span class="line">        dots[currentIndex].setEnabled(false);</span><br><span class="line">        currentIndex = position;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onClick(View v) &#123;</span><br><span class="line">        if (v.getTag().equals(&quot;enter&quot;)) &#123;</span><br><span class="line">            enterMainActivity();</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        int position = (Integer) v.getTag();</span><br><span class="line">        setCurView(position);</span><br><span class="line">        setCurDot(position);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    private void enterMainActivity() &#123;</span><br><span class="line">        Intent intent = new Intent(WelcomeGuideActivity.this,</span><br><span class="line">                WelcomeActivity.class);</span><br><span class="line">        startActivity(intent);</span><br><span class="line">        SharedPreferencesUtil.putBoolean(WelcomeGuideActivity.this, SharedPreferencesUtil.FIRST_OPEN, false);</span><br><span class="line">        finish();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private class PageChangeListener implements ViewPager.OnPageChangeListener &#123;</span><br><span class="line">        @Override</span><br><span class="line">        public void onPageScrollStateChanged(int position) &#123;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public void onPageScrolled(int position, float arg1, int arg2) &#123;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public void onPageSelected(int position) &#123;</span><br><span class="line">            // 设置底部小点选中状态</span><br><span class="line">            setCurDot(position);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们用了三个页面guide_view1、guide_view2、guide_view3作为引导页面，布局类似，只是guide_view3多了个点击进入的Button。以下是guide_view3.xml<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span><br><span class="line">&lt;FrameLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;</span><br><span class="line">    android:layout_width=&quot;match_parent&quot;</span><br><span class="line">    android:layout_height=&quot;match_parent&quot; &gt;</span><br><span class="line"></span><br><span class="line">    &lt;ImageView</span><br><span class="line">        android:layout_width=&quot;match_parent&quot;</span><br><span class="line">        android:layout_height=&quot;match_parent&quot;</span><br><span class="line">        android:scaleType=&quot;centerCrop&quot;</span><br><span class="line">        android:src=&quot;@mipmap/guide_img3&quot; /&gt;</span><br><span class="line">    &lt;Button</span><br><span class="line">        android:id=&quot;@+id/btn_enter&quot;</span><br><span class="line">        android:layout_width=&quot;100dp&quot;</span><br><span class="line">        android:layout_height=&quot;26dp&quot;</span><br><span class="line">        android:layout_gravity=&quot;bottom|center_horizontal&quot;</span><br><span class="line">        android:layout_marginBottom=&quot;75dp&quot;</span><br><span class="line">        android:background=&quot;@drawable/button_shape&quot;</span><br><span class="line">        android:text=&quot;@string/entry&quot;</span><br><span class="line">        android:textColor=&quot;@color/white&quot;</span><br><span class="line">        android:textSize=&quot;18sp&quot;</span><br><span class="line">        android:visibility=&quot;visible&quot; /&gt;</span><br><span class="line"></span><br><span class="line">&lt;/FrameLayout&gt;</span><br></pre></td></tr></table></figure></p>
+<p>WelcomeGuideActivity中值得注意的是该Button点击事件的处理，在点击Button后我们并没有直接进入MainActivity，而是先把SharedPreferences中标记是否第一次进入的布尔值设为false，而后再次进入WelcomeActivity，此时WelcomeActivity会直接setContentView（）然后启动动画，进入MainActivity。</p>
+<p>以上，我们华丽丽的引导页就完成了，需要完整代码的请戳 <a href="https://github.com/lingyunzhu/WelcomPage.git" target="_blank" rel="external">代码传送门</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/RxJava-Android引导页/" rel="tag">#RxJava Android引导页</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/07/20/RxJava实践之打造酷炫启动页/" rel="next" title="RxJava实践之打造酷炫启动页">
+                <i class="fa fa-chevron-left"></i> RxJava实践之打造酷炫启动页
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/07/27/两步打造华丽丽的Android引导页（用到RxJava）/"
+           data-title="两步打造华丽丽的Android引导页（用到RxJava）" data-url="https://lingyunzhu.github.io/2016/07/27/两步打造华丽丽的Android引导页（用到RxJava）/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/image/image_avatar.png"
+               alt="xialong" />
+          <p class="site-author-name" itemprop="name">xialong</p>
+          <p class="site-description motion-element" itemprop="description">探索Android</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/lingyunzhu" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/3278106377/profile?topnav=1&wvr=6&is_all=1" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/lmj623565791" title="鸿洋" target="_blank">鸿洋</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/guolin_blog/" title="郭霖" target="_blank">郭霖</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、WelcomeActivity中判断是否是第一次启动"><span class="nav-number">1.</span> <span class="nav-text">一、WelcomeActivity中判断是否是第一次启动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、WelcomeGuideActivity中，我们使用ViewPager以加载多个引导页面使其可以左右滑动"><span class="nav-number">2.</span> <span class="nav-text">二、WelcomeGuideActivity中，我们使用ViewPager以加载多个引导页面使其可以左右滑动</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xialong</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"lingyunzhu"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("8DjhvcK1vwmXC26IA60rHd1i-gzGzoHsz", "ebD1EJQLhatRQqjw8UkPSlbd");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+</body>
+</html>
